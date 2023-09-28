@@ -1,4 +1,4 @@
-namespace KDesignWeb.Models
+namespace KDesign.Models
 {
     public class ErrorViewModel
     {
