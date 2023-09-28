@@ -1,4 +1,5 @@
 ﻿using KDesign.DataAccess;
+using KDesign.DataAccess.Repository.IRepository;
 using KDesign.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -7,14 +8,14 @@ namespace KDesignWeb.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<Category> objCategoryList = _db.Categories;
+            IEnumerable<Category> objCategoryList = _unitOfWork.Category.GetAll();
             return View(objCategoryList);
         }
 
@@ -35,8 +36,8 @@ namespace KDesignWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Add(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Add(obj);
+                _unitOfWork.Save();
                 TempData["Success"] = "Created succefully";
                 return RedirectToAction("Index");
             }
@@ -50,14 +51,14 @@ namespace KDesignWeb.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.Categories.Find(id);
-            //var categoryFromDbF = _db.Categories.FirstOrDefault(u => u.Id == id);
+            //var categoryFromDb = _db.Categories.Find(id);
+            var categoryFromDbF = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
             //var categoryFromDbS = _db.Categories.SingleOrDefault(u => u.Id == id);
-            if (categoryFromDb == null)
+            if (categoryFromDbF == null)
             {
                 return NotFound();
             }
-            return View(categoryFromDb);
+            return View(categoryFromDbF);
         }
 
         //POST
@@ -71,8 +72,8 @@ namespace KDesignWeb.Controllers
             }
             if (ModelState.IsValid)
             {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
+                _unitOfWork.Category.Update(obj);
+                _unitOfWork.Save();
                 TempData["Success"] = "Updated succefully";
                 return RedirectToAction("Index");
             }
@@ -86,15 +87,15 @@ namespace KDesignWeb.Controllers
             {
                 return NotFound();
             }
-            var categoryFromDb = _db.Categories.Find(id);
-            //var categoryFromDbF = _db.Categories.FirstOrDefault(u => u.Id == id);
+            //var categoryFromDb = _db.Categories.Find(id);
+            var categoryFromDbF = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
             //var categoryFromDbS = _db.Categories.SingleOrDefault(u => u.Id == id);
-            if (categoryFromDb == null)
+            if (categoryFromDbF == null)
             {
                 return NotFound();
             }
             TempData["Success"] = "Deleted succefully";
-            return View(categoryFromDb);
+            return View(categoryFromDbF);
         }
 
         //POST
@@ -102,13 +103,13 @@ namespace KDesignWeb.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _db.Categories.Find(id);
+            var obj = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Categories.Remove(obj);
-            _db.SaveChanges();
+            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.Save();
             return RedirectToAction("Index");
         }
     }

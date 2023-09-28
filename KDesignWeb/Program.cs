@@ -1,4 +1,6 @@
 using KDesign.DataAccess;
+using KDesign.DataAccess.Repository;
+using KDesign.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace KDesignWeb
@@ -14,6 +16,7 @@ namespace KDesignWeb
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
+            builder.Services.AddScoped<IUnitOfWork,UnitOfWork > ();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
             var app = builder.Build();
 
