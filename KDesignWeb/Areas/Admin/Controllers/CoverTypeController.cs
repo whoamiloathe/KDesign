@@ -4,19 +4,20 @@ using KDesign.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace KDesignWeb.Controllers
+namespace KDesignWeb.Areas.Admin.Controllers
 {
-    public class CategoryController : Controller
+    [Area("Admin")]
+    public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CoverTypeController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            IEnumerable<Category> objCategoryList = _unitOfWork.Category.GetAll();
-            return View(objCategoryList);
+            IEnumerable<CoverType> objCoverTypeList = _unitOfWork.CoverType.GetAll();
+            return View(objCoverTypeList);
         }
 
         //GET
@@ -28,15 +29,12 @@ namespace KDesignWeb.Controllers
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Category obj)
+        public IActionResult Create(CoverType obj)
         {
-            if(obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("Name", "Name can't match display order");
-            }
+            
             if (ModelState.IsValid)
             {
-                _unitOfWork.Category.Add(obj);
+                _unitOfWork.CoverType.Add(obj);
                 _unitOfWork.Save();
                 TempData["Success"] = "Created succefully";
                 return RedirectToAction("Index");
@@ -51,28 +49,22 @@ namespace KDesignWeb.Controllers
             {
                 return NotFound();
             }
-            //var categoryFromDb = _db.Categories.Find(id);
-            var categoryFromDbF = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-            //var categoryFromDbS = _db.Categories.SingleOrDefault(u => u.Id == id);
-            if (categoryFromDbF == null)
+            var coverTypeFromDbF = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
+            if (coverTypeFromDbF == null)
             {
                 return NotFound();
             }
-            return View(categoryFromDbF);
+            return View(coverTypeFromDbF);
         }
 
         //POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Category obj)
+        public IActionResult Edit(CoverType obj)
         {
-            if (obj.Name == obj.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("Name", "Name can't match display order");
-            }
             if (ModelState.IsValid)
             {
-                _unitOfWork.Category.Update(obj);
+                _unitOfWork.CoverType.Update(obj);
                 _unitOfWork.Save();
                 TempData["Success"] = "Updated succefully";
                 return RedirectToAction("Index");
@@ -87,28 +79,26 @@ namespace KDesignWeb.Controllers
             {
                 return NotFound();
             }
-            //var categoryFromDb = _db.Categories.Find(id);
-            var categoryFromDbF = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
-            //var categoryFromDbS = _db.Categories.SingleOrDefault(u => u.Id == id);
-            if (categoryFromDbF == null)
+            var coverTypeFromDbF = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
+            if (coverTypeFromDbF == null)
             {
                 return NotFound();
             }
             TempData["Success"] = "Deleted succefully";
-            return View(categoryFromDbF);
+            return View(coverTypeFromDbF);
         }
 
         //POST
-        [HttpPost,ActionName("Delete")]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeletePOST(int? id)
         {
-            var obj = _unitOfWork.Category.GetFirstOrDefault(u => u.Id == id);
+            var obj = _unitOfWork.CoverType.GetFirstOrDefault(u => u.Id == id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _unitOfWork.Category.Remove(obj);
+            _unitOfWork.CoverType.Remove(obj);
             _unitOfWork.Save();
             return RedirectToAction("Index");
         }
