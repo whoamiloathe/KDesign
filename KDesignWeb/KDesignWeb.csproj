@@ -21,4 +21,8 @@
     <ProjectReference Include="..\KDesign.DataAccess\KDesign.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\products\" />
+  </ItemGroup>
+
 </Project>
