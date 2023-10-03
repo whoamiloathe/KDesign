@@ -2,6 +2,7 @@ using KDesign.DataAccess;
 using KDesign.DataAccess.Repository;
 using KDesign.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace KDesignWeb
 {
@@ -17,8 +18,10 @@ namespace KDesignWeb
                 builder.Configuration.GetConnectionString("DefaultConnection")
                 ));
             /*builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-                builder.Configuration.GetConnectionString("LaptopDB")
-                ));*/
+            builder.Configuration.GetConnectionString("LaptopDB")
+            ));*/
+            builder.Services.AddDefaultIdentity<IdentityUser>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork > ();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
             var app = builder.Build();
@@ -35,9 +38,10 @@ namespace KDesignWeb
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();;
 
             app.UseAuthorization();
-
+            app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
