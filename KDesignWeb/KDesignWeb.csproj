@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KDesign.DataAccess\KDesign.DataAccess.csproj" />
+    <ProjectReference Include="..\KDesign.Utility\KDesign.Utility.csproj" />
   </ItemGroup>
 
   <ItemGroup>

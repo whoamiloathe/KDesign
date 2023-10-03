@@ -11,6 +11,8 @@ namespace KDesign.DataAccess.Repository.IRepository
         ICategoryRepository Category { get; }
         ICoverTypeRepository CoverType { get; }
         IProductRepository Product { get; }
+        IApplicationUserRepository ApplicationUser { get; }
+        IShoppingCartRepository ShoppingCart { get; }
         void Save();
     }
 }
